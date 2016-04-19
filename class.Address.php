@@ -29,6 +29,33 @@ class Address {
 	protected $_time_updated;
 
 	/*
+	 * Constructor
+	 * Optional array of property manes and values
+	 */
+	function __construct($data = array()) {
+		$this->_time_created = time();
+
+		// Ensure that the address can be populated
+		if (!is_array($data)) {
+			trigger_error('Unable to construct address with a ' . get_class($name));
+		}
+
+		// If there is at least one value populate the address value with it
+		if (count($data) > 0) {
+			foreach ($data as $name => $value) {
+				// Special case for protected properties
+				if (in_array($name, array(
+						'time_created',
+						'time_updated',
+					))) {
+						$name = '_' . $name;
+				}
+				$this->$name = $value;
+			}
+		}
+	}
+
+	/*
 	 * Magic __get
 	 */
 
@@ -50,7 +77,7 @@ class Address {
 	}
 
 	/*
-	 * Magic __get
+	 * Magic __set
 	 */
 
 	function __set($name, $value) {
@@ -62,6 +89,14 @@ class Address {
 
 		// Unable to access property trigger error
 		trigger_error('Undefined or unallowed property via set(): ' . $name);
+	}
+
+	/*
+	 * Magic __toString
+	 */
+
+	function __toString() {
+		return $this->display();
 	}
 
 	/*
