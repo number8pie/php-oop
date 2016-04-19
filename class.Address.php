@@ -65,7 +65,7 @@ class Address {
 			$this->_postal_code = $this->_postal_code_guess();
 		}
 
-		// Attempt tp return a protected property by name
+		// Attempt to return a protected property by name
 		$protected_property_name = '_' . $name;
 		if (property_exists($this, $protected_property_name)) {
 			return $this->$protected_property_name;
