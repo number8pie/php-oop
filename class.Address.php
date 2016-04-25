@@ -5,6 +5,18 @@
  */
 
 class Address {
+
+	const ADDRESS_TYPE_RESIDENCE = 1;
+	const ADDRESS_TYPE_BUSINESS = 2;
+	const ADDRESS_TYPE_PARK = 3;
+
+	// Address types
+	static public $valid_address_types = array(
+		Address::ADDRESS_TYPE_RESIDENCE => 'Residence',
+		Address::ADDRESS_TYPE_BUSINESS => 'Business',
+		Address::ADDRESS_TYPE_PARK => 'Park', 
+	);
+
 	// Street Address
 	public $street_address_1;
 	public $street_address_2;
@@ -24,7 +36,10 @@ class Address {
 	// Primary key of an address
 	protected $_address_id;
 
-	// When the recoed was created and last updated
+	// Address type ID
+	protected $_address_type_id;
+
+	// When the record was created and last updated
 	protected $_time_created;
 	protected $_time_updated;
 
@@ -81,6 +96,12 @@ class Address {
 	 */
 
 	function __set($name, $value) {
+		// Only set valid address type ID
+		if ('address_type_id' == $name) {
+			$this->_setAddressTypeId($value);
+			return;
+		}
+
 		// Allow anything to set the postal code
 		if ('postal_code' == $name) {
 			$this->$name = $value;
@@ -132,6 +153,25 @@ class Address {
 
 		return $output;
 	}
+
+	/*
+	 * Determine if the address type is valid
+	 */
+
+	static public function isValidAddressTypeId($address_type_id) {
+		return array_key_exists($address_type_id, self::$valid_address_types);
+	}
+
+	/*
+	 * If valid setthe address type ID
+	 */
+
+	protected function _setAddressTypeId($address_type_id) {
+		if (self::isValidAddressTypeId($address_type_id)) {
+			$this->_address_type_id = $address_type_id;
+		}
+	}
+
 }
 
 ?>
